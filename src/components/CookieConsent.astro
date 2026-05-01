@@ -1,0 +1,151 @@
+---
+// Lightweight cookie consent banner.
+// Stores the user's choice in localStorage under "cookie-consent":
+//   "accepted" | "rejected"
+// Analytics scripts that depend on consent should listen for the
+// "cookie-consent:accepted" event or check window.__cookieConsent.
+---
+<div
+  id="cookie-consent"
+  class="cookie-consent"
+  role="dialog"
+  aria-live="polite"
+  aria-label="Cookie consent"
+  hidden
+>
+  <div class="cookie-consent__inner">
+    <p class="cookie-consent__text">
+      This site uses only essential cookies and privacy-friendly, aggregate
+      analytics to understand which pages are useful. No tracking, no ads,
+      no selling of data. See the <a href="/privacy">privacy policy</a>.
+    </p>
+    <div class="cookie-consent__actions">
+      <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-consent="rejected">
+        Reject
+      </button>
+      <button type="button" class="cookie-consent__btn cookie-consent__btn--primary" data-consent="accepted">
+        Accept
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cookie-consent {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1000;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    font-family: var(--font-sans);
+  }
+  .cookie-consent[hidden] { display: none; }
+
+  .cookie-consent__inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .cookie-consent__text {
+    margin: 0;
+    flex: 1 1 280px;
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .cookie-consent__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .cookie-consent__btn {
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .cookie-consent__btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .cookie-consent__btn--primary {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .cookie-consent__btn--primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  @media (max-width: 480px) {
+    .cookie-consent__inner { padding: 0.85rem 1rem; }
+    .cookie-consent__actions { width: 100%; }
+    .cookie-consent__btn { flex: 1; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var STORAGE_KEY = 'cookie-consent';
+    var banner = document.getElementById('cookie-consent');
+    if (!banner) return;
+
+    function loadAnalytics() {
+      if (window.__cookieConsentAnalyticsLoaded) return;
+      window.__cookieConsentAnalyticsLoaded = true;
+      var s = document.createElement('script');
+      s.defer = true;
+      s.src = '/_vercel/insights/script.js';
+      document.body.appendChild(s);
+    }
+
+    function setChoice(value) {
+      try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
+      window.__cookieConsent = value;
+      banner.hidden = true;
+      if (value === 'accepted') {
+        loadAnalytics();
+        document.dispatchEvent(new CustomEvent('cookie-consent:accepted'));
+      } else {
+        document.dispatchEvent(new CustomEvent('cookie-consent:rejected'));
+      }
+    }
+
+    var stored = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+
+    if (stored === 'accepted') {
+      window.__cookieConsent = 'accepted';
+      loadAnalytics();
+    } else if (stored === 'rejected') {
+      window.__cookieConsent = 'rejected';
+    } else {
+      banner.hidden = false;
+    }
+
+    banner.querySelectorAll('[data-consent]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setChoice(btn.getAttribute('data-consent'));
+      });
+    });
+  })();
+</script>
