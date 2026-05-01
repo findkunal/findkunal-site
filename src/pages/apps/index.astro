@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AppCard from '../../components/AppCard.astro';
+
+const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout title="Apps — Kunal" description="Apps I'm building.">
+  <h1>Apps</h1>
+  <p class="lede">A collection of small apps I'm building, from rough prototypes to shipped products.</p>
+
+  {apps.length > 0 ? (
+    <div class="grid" style="margin-top:2rem;">
+      {apps.map((app) => (
+        <AppCard
+          href={`/apps/${app.id}`}
+          name={app.data.name}
+          tagline={app.data.tagline}
+          status={app.data.status}
+        />
+      ))}
+    </div>
+  ) : (
+    <p class="muted">Nothing to show yet — check back soon.</p>
+  )}
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); }
+</style>

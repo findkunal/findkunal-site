@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="About — Kunal" description="A bit about who I am and what I'm doing.">
+  <h1>About</h1>
+  <p class="lede">
+    I'm Kunal — an engineer who writes and builds. This page is a longer
+    version of the homepage hello.
+  </p>
+
+  <h2>What I do</h2>
+  <p>
+    I work on software for a living and on small apps for fun. I think most
+    clearly through writing, which is why I keep a blog at
+    <a href="https://thoughts.findkunal.com">thoughts.findkunal.com</a>.
+  </p>
+
+  <h2>What you'll find here</h2>
+  <ul>
+    <li><a href="https://thoughts.findkunal.com">Essays</a> on the things I'm thinking about.</li>
+    <li><a href="/now">A "now" page</a> with what I'm focused on this month.</li>
+    <li><a href="/uses">My setup</a> — tools and gear I rely on.</li>
+  </ul>
+
+  <h2>Elsewhere</h2>
+  <ul>
+    <li><a href="https://x.com/findkunal" rel="me noopener">X / @findkunal</a></li>
+    <li><a href="https://github.com/findkunal" rel="me noopener">GitHub</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); }
+</style>

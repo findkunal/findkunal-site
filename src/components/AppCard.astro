@@ -1,0 +1,27 @@
+---
+interface Props {
+  href: string;
+  name: string;
+  tagline: string;
+  status: 'live' | 'beta' | 'dev';
+}
+const { href, name, tagline, status } = Astro.props;
+const label = status === 'live' ? 'Live' : status === 'beta' ? 'Beta' : 'In development';
+---
+<a class="card" href={href}>
+  <div class="row">
+    <h3>{name}</h3>
+    <span class:list={['badge', status]}>{label}</span>
+  </div>
+  <p>{tagline}</p>
+</a>
+
+<style>
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+// Pulls the latest posts from the blog's RSS feed at build time.
+// Fails gracefully if the feed isn't reachable (e.g., during early local dev).
+const FEED_URL = 'https://thoughts.findkunal.com/en/rss.xml';
+
+type Post = { title: string; link: string; pubDate?: string };
+let posts: Post[] = [];
+
+try {
+  const res = await fetch(FEED_URL);
+  if (res.ok) {
+    const xml = await res.text();
+    const items = xml.match(/<item[\s\S]*?<\/item>/g) ?? [];
+    posts = items.slice(0, 3).map((item) => {
+      const pick = (tag: string) => {
+        const m = item.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`));
+        if (!m) return '';
+        return m[1].replace(/^<!\[CDATA\[|\]\]>$/g, '').trim();
+      };
+      return { title: pick('title'), link: pick('link'), pubDate: pick('pubDate') };
+    });
+  }
+} catch {
+  posts = [];
+}
+
+const fmt = (d?: string) => {
+  if (!d) return '';
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+};
+---
+{posts.length > 0 ? (
+  <ul class="clean posts">
+    {posts.map((p) => (
+      <li>
+        <a href={p.link}>{p.title}</a>
+        {p.pubDate && <span class="muted"> · {fmt(p.pubDate)}</span>}
+      </li>
+    ))}
+  </ul>
+) : (
+  <p class="muted">Recent writing will appear here once the blog feed is live.</p>
+)}
+
+<style>
+  .posts li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .posts li:last-child { border-bottom: none; }
+</style>

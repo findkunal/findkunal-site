@@ -1,17 +1,67 @@
 ---
+// import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+// import AppCard from '../components/AppCard.astro';
+import RecentPosts from '../components/RecentPosts.astro';
 
+// Apps section hidden until workplace permission is granted.
+// const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
 ---
+<BaseLayout title="Kunal — findkunal.com">
+  <section class="hero">
+    <p class="kicker">Engineer · Writer · Builder</p>
+    <h1>Hi, I'm Kunal.</h1>
+    <p class="lede">
+      I build small useful things and write about how I think.
+      This site is the front door to my work, my apps, and my essays.
+    </p>
+  </section>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <hr />
+
+  <section>
+    <h2>Currently</h2>
+    <p>
+      Cooking, organizing the home, playing in a cricket tournament, and writing
+      essays at <a href="https://thoughts.findkunal.com">thoughts.findkunal.com</a>.
+    </p>
+    <p><a href="/now">See what I'm focused on this month →</a></p>
+  </section>
+
+  <hr />
+
+  {/*
+    Apps section hidden until workplace permission is granted.
+  <section>
+    <h2>Apps</h2>
+    {apps.length > 0 ? (
+      <div class="grid">
+        {apps.map((app) => (
+          <AppCard
+            href={`/apps/${app.id}`}
+            name={app.data.name}
+            tagline={app.data.tagline}
+            status={app.data.status}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="muted">App showcases coming soon.</p>
+    )}
+    <p style="margin-top:1rem;"><a href="/apps">All apps →</a></p>
+  </section>
+
+  <hr />
+  */}
+
+  <section>
+    <h2>Recent writing</h2>
+    <RecentPosts />
+    <p style="margin-top:1rem;"><a href="https://thoughts.findkunal.com">All essays →</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding-top: 1rem; }
+  .lede { font-size: 1.1rem; color: var(--muted); max-width: 38rem; }
+</style>

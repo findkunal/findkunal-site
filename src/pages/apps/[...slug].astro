@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const apps = await getCollection('apps');
+  return apps.map((app) => ({ params: { slug: app.id }, props: { app } }));
+};
+
+const { app } = Astro.props;
+const { Content } = await render(app);
+const { name, tagline, status, url, repo, stack, started } = app.data;
+const statusLabel = status === 'live' ? 'Live' : status === 'beta' ? 'Beta' : 'In development';
+---
+<BaseLayout title={`${name} — Kunal`} description={tagline}>
+  <p class="kicker"><a href="/apps">← All apps</a></p>
+  <h1>{name}</h1>
+  <p class="lede">{tagline}</p>
+
+  <div class="meta">
+    <span class:list={['badge', status]}>{statusLabel}</span>
+    {started && <span class="muted">Since {started}</span>}
+    {stack.length > 0 && <span class="muted">{stack.join(' · ')}</span>}
+  </div>
+
+  {(url || repo) && (
+    <p class="links">
+      {url && <a href={url}>Visit →</a>}
+      {repo && <a href={repo}>Source →</a>}
+    </p>
+  )}
+
+  <hr />
+
+  <article class="prose">
+    <Content />
+  </article>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.15rem; color: var(--muted); }
+  .meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .links { display: flex; gap: 1rem; }
+  .prose :global(h2) { margin-top: 2rem; }
+</style>

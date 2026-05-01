@@ -1,0 +1,61 @@
+---
+const path = Astro.url.pathname;
+const isActive = (p: string) => path === p || path.startsWith(p + '/');
+const links = [
+  { href: '/about', label: 'About' },
+  // { href: '/apps', label: 'Apps' }, // hidden until workplace approval
+  { href: '/now', label: 'Now' },
+  { href: 'https://thoughts.findkunal.com', label: 'Writing', external: true },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/">Kunal</a>
+    <nav>
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class:list={['nav-link', { active: !l.external && isActive(l.href) }]}
+          {...l.external ? { rel: 'noopener', target: '_self' } : {}}
+        >{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  nav {
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); }
+</style>
