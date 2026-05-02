@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { quotes } from '../data/quotes';
+
+// Show in the order they were added (newest at top of the file = oldest first).
+// Reverse so the most recently added quote shows first.
+const ordered = [...quotes].reverse();
+---
+<BaseLayout
+  title="Quotes — Kunal"
+  description="A commonplace book of passages worth keeping."
+>
+  <h1>Quotes</h1>
+  <p class="lede">
+    A commonplace book — passages I've copied down because they kept resonating.
+    Some are years old. Some are from this week.
+  </p>
+
+  <ul class="clean quotes">
+    {ordered.map((q) => (
+      <li class="quote">
+        <blockquote>
+          <p>{q.text}</p>
+          <footer>
+            {q.by && <cite>— {q.by}</cite>}
+            {q.source && (
+              <span class="source">
+                {', '}
+                {q.link ? (
+                  <a href={q.link} rel="noopener">{q.source}</a>
+                ) : (
+                  <em>{q.source}</em>
+                )}
+              </span>
+            )}
+          </footer>
+        </blockquote>
+        {q.tags && q.tags.length > 0 && (
+          <div class="tags">
+            {q.tags.map((t) => <span class="tag">{t}</span>)}
+          </div>
+        )}
+      </li>
+    ))}
+  </ul>
+
+  <hr />
+  <p class="muted small">
+    Quotes live in <code>src/data/quotes.ts</code>. Add a new one by appending to
+    the array — newest entries appear at the top.
+  </p>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); max-width: 38rem; }
+  .quotes { margin-top: 2.5rem; }
+  .quote { margin-bottom: 2.5rem; }
+  blockquote {
+    margin: 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    border-left: 3px solid var(--accent);
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.55;
+    font-style: italic;
+    color: var(--ink);
+  }
+  blockquote p { margin: 0 0 0.5rem; }
+  blockquote footer {
+    font-style: normal;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  blockquote cite { font-style: normal; }
+  .source em { font-style: italic; }
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin: 0.6rem 0 0 1.25rem;
+  }
+  .tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+  }
+  .small { font-size: 0.85rem; }
+  code {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Colophon — Kunal"
+  description="How this site is built, hosted, and maintained."
+>
+  <h1>Colophon</h1>
+  <p class="lede">
+    A small note on how this site is built — for fellow tinkerers and for future
+    me, when I forget.
+  </p>
+
+  <h2>Stack</h2>
+  <ul class="clean stack">
+    <li>
+      <strong><a href="https://astro.build/" rel="noopener">Astro</a></strong> —
+      static site generator. Pages are plain <code>.astro</code> files with a
+      sprinkle of TypeScript. Almost no client-side JavaScript ships unless a
+      page actually needs it.
+    </li>
+    <li>
+      <strong><a href="https://vercel.com/" rel="noopener">Vercel</a></strong> —
+      hosts the production build. Every push to <code>main</code> triggers a
+      deploy.
+    </li>
+    <li>
+      <strong><a href="https://cloudinary.com/" rel="noopener">Cloudinary</a></strong>
+      — stores and serves every photo and drawing. The gallery on
+      <a href="/photos">/photos</a> reads tag-based JSON lists at runtime, so new
+      uploads appear without a rebuild.
+    </li>
+    <li>
+      <strong><a href="https://github.com/findkunal/findkunal-site" rel="noopener">GitHub</a></strong>
+      — source of truth. Public on purpose; copy whatever's useful.
+    </li>
+  </ul>
+
+  <h2>Type</h2>
+  <p>
+    Body text is set in
+    <a href="https://fonts.google.com/specimen/Inter" rel="noopener">Inter</a>.
+    Headings and pull quotes are in
+    <a href="https://fonts.google.com/specimen/Newsreader" rel="noopener">Newsreader</a>.
+    Both are loaded from Google Fonts and rendered in the simplest weights I
+    could justify.
+  </p>
+
+  <h2>Color</h2>
+  <p>
+    A muted ochre accent (<span class="swatch" aria-hidden="true"></span>
+    <code>#b6743a</code>) over a warm off-white. The palette flips automatically
+    based on <code>prefers-color-scheme</code>; there's no manual toggle yet.
+  </p>
+
+  <h2>Tools</h2>
+  <ul class="clean stack">
+    <li><strong>VS Code</strong> + <strong>GitHub Copilot</strong> — editor and pair-programmer.</li>
+    <li><strong>Open Library Covers</strong> — book covers on the <a href="/bookshelf">bookshelf</a> and <a href="/favorites">favorites</a>, fetched by ISBN.</li>
+    <li><strong>Astro Sitemap</strong> — generates <a href="/sitemap-index.xml">sitemap-index.xml</a> at build time.</li>
+    <li><strong>Vercel Web Analytics</strong> — privacy-friendly, only loaded after cookie consent.</li>
+  </ul>
+
+  <h2>Principles</h2>
+  <ul>
+    <li>Static where possible, dynamic where helpful.</li>
+    <li>No tracking, no ads, no popovers begging for email.</li>
+    <li>Plain HTML and CSS first; JS only when the experience needs it.</li>
+    <li>Words over animations.</li>
+  </ul>
+
+  <h2>Source</h2>
+  <p>
+    The site lives at
+    <a href="https://github.com/findkunal/findkunal-site" rel="noopener">github.com/findkunal/findkunal-site</a>.
+    Open an issue if something's broken, or just have a look around.
+  </p>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); max-width: 38rem; }
+  .stack li {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--rule);
+    line-height: 1.5;
+  }
+  .stack li:last-child { border-bottom: none; }
+  code {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+  .swatch {
+    display: inline-block;
+    width: 0.85em;
+    height: 0.85em;
+    background: var(--accent);
+    border-radius: 2px;
+    vertical-align: -1px;
+    margin-right: 0.15rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 60%, var(--ink));
+  }
+</style>

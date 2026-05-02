@@ -4,12 +4,16 @@ export type FavoriteItem = {
   link?: string;
   note?: string;
   isbn?: string;
+  poster?: string;
+  year?: string;
+  featured?: boolean;
 };
 
 export type FavoriteSection = {
   id: string;
   heading: string;
   description?: string;
+  layout?: 'list' | 'cards';
   items: FavoriteItem[];
 };
 
@@ -107,6 +111,122 @@ export const favorites: FavoriteSection[] = [
       { title: 'Astro', link: 'https://astro.build/', note: 'This site runs on it.' },
       { title: 'Cloudinary', link: 'https://cloudinary.com/', note: 'Hosts every image you see here.' },
       { title: 'VS Code', link: 'https://code.visualstudio.com/' },
+    ],
+  },
+  {
+    id: 'movies',
+    heading: 'Movies',
+    description: 'Films that have stayed with me.',
+    layout: 'cards',
+    items: [
+      {
+        title: 'Captain Fantastic',
+        by: 'Matt Ross',
+        year: '2016',
+        link: 'https://www.themoviedb.org/movie/334533',
+      },
+      {
+        title: 'Little Miss Sunshine',
+        by: 'Jonathan Dayton, Valerie Faris',
+        year: '2006',
+        link: 'https://www.themoviedb.org/movie/773',
+      },
+      {
+        title: 'Juror #2',
+        by: 'Clint Eastwood',
+        year: '2024',
+        link: 'https://www.themoviedb.org/movie/1052999',
+      },
+      {
+        title: 'Parasite',
+        by: 'Bong Joon-ho',
+        year: '2019',
+        link: 'https://www.themoviedb.org/movie/496243',
+      },
+      {
+        title: 'The Peanut Butter Falcon',
+        by: 'Tyler Nilson, Michael Schwartz',
+        year: '2019',
+        link: 'https://www.themoviedb.org/movie/527641',
+      },
+      {
+        title: 'The Straight Story',
+        by: 'David Lynch',
+        year: '1999',
+        link: 'https://www.themoviedb.org/movie/12549',
+      },
+    ],
+  },
+  {
+    id: 'shows',
+    heading: 'Shows',
+    description: 'TV that earned its hours.',
+    layout: 'cards',
+    items: [
+      {
+        title: 'Adolescence',
+        by: 'Stephen Graham, Jack Thorne',
+        year: '2025',
+        link: 'https://www.themoviedb.org/tv/249042',
+      },
+      {
+        title: 'The Bear',
+        by: 'Christopher Storer',
+        year: '2022–',
+        link: 'https://www.themoviedb.org/tv/136315',
+      },
+      {
+        title: 'The Pitt',
+        by: 'R. Scott Gemmill',
+        year: '2025–',
+        link: 'https://www.themoviedb.org/tv/241554',
+      },
+      {
+        title: 'Seinfeld',
+        by: 'Larry David, Jerry Seinfeld',
+        year: '1989–1998',
+        link: 'https://www.themoviedb.org/tv/1400',
+      },
+    ],
+  },
+  {
+    id: 'anime',
+    heading: 'Anime',
+    description: 'Stories that hit hardest in animated form.',
+    layout: 'cards',
+    items: [
+      {
+        title: 'Pantheon',
+        by: 'Craig Silverstein',
+        year: '2022–2023',
+        featured: true,
+        link: 'https://www.themoviedb.org/tv/110381',
+        note: "This one sits very close to my heart. Pantheon takes the question I've been chewing on for years — what makes you, you? — and answers it with the seriousness it deserves. It treats consciousness, grief, family, and identity as engineering problems and as spiritual ones at the same time, without flinching from either. The final stretch is one of the most ambitious things I've seen on a screen: it scales from a single father-daughter conversation to the fate of the universe, and somehow earns every step. I don't know another show that takes ideas this big and stays this human.",
+      },
+      {
+        title: 'Death Note',
+        by: 'Tsugumi Ohba, Takeshi Obata',
+        year: '2006–2007',
+        link: 'https://www.themoviedb.org/tv/13916',
+      },
+      {
+        title: 'Fullmetal Alchemist: Brotherhood',
+        by: 'Hiromu Arakawa',
+        year: '2009–2010',
+        link: 'https://www.themoviedb.org/tv/31911',
+      },
+      {
+        title: 'Berserk',
+        by: 'Kentaro Miura',
+        year: '1997–1998',
+        link: 'https://www.themoviedb.org/tv/30991',
+      },
+      {
+        title: 'Code Geass: Lelouch of the Rebellion',
+        by: 'Goro Taniguchi',
+        year: '2006–2008',
+        link: 'https://www.themoviedb.org/tv/2737',
+      },
     ],
   },
 ];
