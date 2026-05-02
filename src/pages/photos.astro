@@ -2,219 +2,270 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const CLOUD_NAME = 'dbi1tlqg3';
-const TAG = 'blog';
+
+const galleries = [
+  { id: 'photos', label: 'Photos', tag: 'blog', emptyText: 'No photos yet — check back soon.' },
+  { id: 'drawings', label: 'Drawings', tag: 'drawing', emptyText: 'No drawings yet — check back soon.' },
+] as const;
 ---
 <BaseLayout
-  title="Photos — Kunal"
-  description="A small gallery of photos I've taken."
+  title="Photos & Drawings — Kunal"
+  description="A small gallery of photos and drawings."
 >
   <div class="photos-head">
     <div>
-      <h1>Photos</h1>
+      <h1>Gallery</h1>
       <p class="lede">A few moments worth keeping.</p>
     </div>
-
-    <div id="view-toggle" class="view-toggle hidden" role="tablist" aria-label="Gallery layout">
-      <button type="button" data-view="grid-3" class="view-btn is-active" aria-label="3-column grid">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><rect x="16" y="2" width="6" height="6" rx="1"/><rect x="2" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/><rect x="16" y="9" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/></svg>
-      </button>
-      <button type="button" data-view="grid-2" class="view-btn" aria-label="2-column grid">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
-      </button>
-      <button type="button" data-view="single" class="view-btn" aria-label="Single photo view">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/></svg>
-      </button>
-    </div>
   </div>
 
-  <p id="photos-status" class="muted">Loading photos…</p>
+  <div class="category-tabs" role="tablist" aria-label="Gallery category">
+    {galleries.map((g, i) => (
+      <button
+        type="button"
+        role="tab"
+        class:list={['category-tab', { 'is-active': i === 0 }]}
+        data-category={g.id}
+        aria-selected={i === 0 ? 'true' : 'false'}
+      >{g.label}</button>
+    ))}
+  </div>
 
-  <ul id="photo-grid" class="photo-grid clean cols-3 hidden"></ul>
-
-  <div id="photo-single" class="single hidden" aria-hidden="true">
-    <figure>
-      <div class="single-frame">
-        <div id="single-spinner" class="spinner" aria-hidden="true"></div>
-        <img id="single-img" src="" alt="" />
+  {galleries.map((g, i) => (
+    <section
+      class:list={['gallery', { hidden: i !== 0 }]}
+      data-gallery={g.id}
+      data-tag={g.tag}
+      data-empty={g.emptyText}
+      aria-hidden={i !== 0 ? 'true' : 'false'}
+    >
+      <div class="gallery-head">
+        <div class="view-toggle hidden" role="tablist" aria-label="Layout">
+          <button type="button" data-view="grid-3" class="view-btn is-active" aria-label="3-column grid">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><rect x="16" y="2" width="6" height="6" rx="1"/><rect x="2" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/><rect x="16" y="9" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/></svg>
+          </button>
+          <button type="button" data-view="grid-2" class="view-btn" aria-label="2-column grid">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
+          </button>
+          <button type="button" data-view="single" class="view-btn" aria-label="Single view">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/></svg>
+          </button>
+        </div>
       </div>
-      <figcaption id="single-caption" class="muted"></figcaption>
-    </figure>
-    <div class="single-controls">
-      <button type="button" id="prev-btn" class="nav-btn" aria-label="Previous photo">← Previous</button>
-      <span id="single-counter" class="muted"></span>
-      <button type="button" id="next-btn" class="nav-btn" aria-label="Next photo">Next →</button>
-    </div>
-  </div>
+
+      <p class="status muted">Loading…</p>
+      <ul class="photo-grid clean cols-3 hidden"></ul>
+
+      <div class="single hidden" aria-hidden="true">
+        <figure>
+          <div class="single-frame">
+            <div class="spinner" aria-hidden="true"></div>
+            <img class="single-img" src="" alt="" />
+          </div>
+          <figcaption class="single-caption muted"></figcaption>
+        </figure>
+        <div class="single-controls">
+          <button type="button" class="nav-btn prev-btn" aria-label="Previous">← Previous</button>
+          <span class="single-counter muted"></span>
+          <button type="button" class="nav-btn next-btn" aria-label="Next">Next →</button>
+        </div>
+      </div>
+    </section>
+  ))}
 </BaseLayout>
 
-<script is:inline define:vars={{ CLOUD_NAME, TAG }}>
-  (async () => {
-    const status = document.getElementById('photos-status');
-    const grid = document.getElementById('photo-grid');
-    const toggle = document.getElementById('view-toggle');
-    const single = document.getElementById('photo-single');
-    const singleImg = document.getElementById('single-img');
-    const singleCaption = document.getElementById('single-caption');
-    const counter = document.getElementById('single-counter');
-    const spinner = document.getElementById('single-spinner');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-
+<script is:inline define:vars={{ CLOUD_NAME }}>
+  (() => {
     const cldUrl = (publicId, version, format, transforms) =>
       `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transforms}/v${version}/${publicId}.${format}`;
 
-    let photos = [];
-    try {
-      const res = await fetch(
-        `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${TAG}.json`,
-        { cache: 'no-store' },
-      );
-      if (!res.ok) throw new Error(`Cloudinary list returned ${res.status}`);
-      const data = await res.json();
-      const resources = (data.resources ?? []).sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      );
-      photos = resources.map((r) => ({
-        id: r.public_id,
-        caption: r.context?.custom?.caption ?? '',
-        alt: r.context?.custom?.alt ?? r.context?.custom?.caption ?? r.public_id,
-        thumb: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_fit,w_800,h_800'),
-        large: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_limit,w_1800,h_1800'),
-      }));
-    } catch (err) {
-      console.warn('[photos] Could not load Cloudinary list:', err);
-      status.textContent = "Couldn't load the gallery right now. Please check back later.";
-      return;
-    }
+    const setupGallery = async (root) => {
+      const tag = root.dataset.tag;
+      const emptyText = root.dataset.empty || 'Nothing here yet.';
+      const status = root.querySelector('.status');
+      const grid = root.querySelector('.photo-grid');
+      const toggle = root.querySelector('.view-toggle');
+      const single = root.querySelector('.single');
+      const singleImg = root.querySelector('.single-img');
+      const singleCaption = root.querySelector('.single-caption');
+      const counter = root.querySelector('.single-counter');
+      const spinner = root.querySelector('.spinner');
+      const prevBtn = root.querySelector('.prev-btn');
+      const nextBtn = root.querySelector('.next-btn');
 
-    if (photos.length === 0) {
-      status.textContent = 'No photos yet — check back soon.';
-      return;
-    }
-
-    // Render grid
-    const frag = document.createDocumentFragment();
-    photos.forEach((p, i) => {
-      const li = document.createElement('li');
-      li.className = 'photo';
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'photo-tile';
-      btn.dataset.index = String(i);
-      btn.setAttribute('aria-label', `View photo ${i + 1}`);
-      const img = document.createElement('img');
-      img.src = p.thumb;
-      img.alt = p.alt;
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.width = 800;
-      img.height = 800;
-      btn.appendChild(img);
-      if (p.caption) {
-        const span = document.createElement('span');
-        span.className = 'caption';
-        span.textContent = p.caption;
-        btn.appendChild(span);
+      let photos = [];
+      try {
+        const res = await fetch(
+          `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${tag}.json`,
+          { cache: 'no-store' },
+        );
+        if (!res.ok) throw new Error(`Cloudinary list returned ${res.status}`);
+        const data = await res.json();
+        const resources = (data.resources ?? []).sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
+        photos = resources.map((r) => ({
+          id: r.public_id,
+          caption: r.context?.custom?.caption ?? '',
+          alt: r.context?.custom?.alt ?? r.context?.custom?.caption ?? r.public_id,
+          thumb: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_fit,w_800,h_800'),
+          large: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_limit,w_1800,h_1800'),
+        }));
+      } catch (err) {
+        console.warn(`[gallery:${tag}] Could not load Cloudinary list:`, err);
+        status.textContent = "Couldn't load this gallery right now. Please check back later.";
+        return;
       }
-      li.appendChild(btn);
-      frag.appendChild(li);
-    });
-    grid.appendChild(frag);
-    status.classList.add('hidden');
-    grid.classList.remove('hidden');
-    toggle.classList.remove('hidden');
 
-    const buttons = toggle.querySelectorAll('.view-btn');
-    let currentIndex = 0;
-    let loadToken = 0;
-
-    const setLoading = (loading) => {
-      spinner.classList.toggle('is-visible', loading);
-      singleImg.classList.toggle('is-loading', loading);
-      prevBtn.disabled = loading;
-      nextBtn.disabled = loading;
-    };
-
-    const setView = (view) => {
-      buttons.forEach((b) => b.classList.toggle('is-active', b.dataset.view === view));
-      if (view === 'single') {
-        grid.classList.add('hidden');
-        single.classList.remove('hidden');
-        single.setAttribute('aria-hidden', 'false');
-        showSingle(currentIndex);
-      } else {
-        single.classList.add('hidden');
-        single.setAttribute('aria-hidden', 'true');
-        grid.classList.remove('hidden');
-        grid.classList.remove('cols-2', 'cols-3');
-        grid.classList.add(view === 'grid-2' ? 'cols-2' : 'cols-3');
+      if (photos.length === 0) {
+        status.textContent = emptyText;
+        return;
       }
-    };
 
-    const showSingle = (i) => {
-      currentIndex = (i + photos.length) % photos.length;
-      const p = photos[currentIndex];
-      const token = ++loadToken;
-      setLoading(true);
-      singleImg.alt = p.alt;
-      singleCaption.textContent = p.caption || '';
-      counter.textContent = `${currentIndex + 1} / ${photos.length}`;
-
-      const preload = new Image();
-      preload.onload = () => {
-        if (token !== loadToken) return;
-        singleImg.src = p.large;
-        setLoading(false);
-      };
-      preload.onerror = () => {
-        if (token !== loadToken) return;
-        setLoading(false);
-      };
-      preload.src = p.large;
-    };
-
-    buttons.forEach((b) =>
-      b.addEventListener('click', () => setView(b.dataset.view)),
-    );
-
-    grid.querySelectorAll('.photo-tile').forEach((tile) => {
-      tile.addEventListener('click', () => {
-        currentIndex = Number(tile.dataset.index) || 0;
-        setView('single');
+      const frag = document.createDocumentFragment();
+      photos.forEach((p, i) => {
+        const li = document.createElement('li');
+        li.className = 'photo';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'photo-tile';
+        btn.dataset.index = String(i);
+        btn.setAttribute('aria-label', `View item ${i + 1}`);
+        const img = document.createElement('img');
+        img.src = p.thumb;
+        img.alt = p.alt;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.width = 800;
+        img.height = 800;
+        btn.appendChild(img);
+        if (p.caption) {
+          const span = document.createElement('span');
+          span.className = 'caption';
+          span.textContent = p.caption;
+          btn.appendChild(span);
+        }
+        li.appendChild(btn);
+        frag.appendChild(li);
       });
-    });
+      grid.appendChild(frag);
+      status.classList.add('hidden');
+      grid.classList.remove('hidden');
+      toggle.classList.remove('hidden');
 
-    prevBtn.addEventListener('click', () => showSingle(currentIndex - 1));
-    nextBtn.addEventListener('click', () => showSingle(currentIndex + 1));
+      const buttons = toggle.querySelectorAll('.view-btn');
+      let currentIndex = 0;
+      let loadToken = 0;
 
-    document.addEventListener('keydown', (e) => {
-      if (single.classList.contains('hidden')) return;
-      if (e.key === 'ArrowLeft') showSingle(currentIndex - 1);
-      else if (e.key === 'ArrowRight') showSingle(currentIndex + 1);
-    });
+      const setLoading = (loading) => {
+        spinner.classList.toggle('is-visible', loading);
+        singleImg.classList.toggle('is-loading', loading);
+        prevBtn.disabled = loading;
+        nextBtn.disabled = loading;
+      };
 
-    // Swipe support
-    const frame = single.querySelector('.single-frame');
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchActive = false;
-    frame.addEventListener('touchstart', (e) => {
-      if (e.touches.length !== 1) return;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      touchActive = true;
-    }, { passive: true });
-    frame.addEventListener('touchend', (e) => {
-      if (!touchActive) return;
-      touchActive = false;
-      const t = e.changedTouches[0];
-      const dx = t.clientX - touchStartX;
-      const dy = t.clientY - touchStartY;
-      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-        if (prevBtn.disabled || nextBtn.disabled) return;
-        if (dx < 0) showSingle(currentIndex + 1);
-        else showSingle(currentIndex - 1);
-      }
+      const setView = (view) => {
+        buttons.forEach((b) => b.classList.toggle('is-active', b.dataset.view === view));
+        if (view === 'single') {
+          grid.classList.add('hidden');
+          single.classList.remove('hidden');
+          single.setAttribute('aria-hidden', 'false');
+          showSingle(currentIndex);
+        } else {
+          single.classList.add('hidden');
+          single.setAttribute('aria-hidden', 'true');
+          grid.classList.remove('hidden');
+          grid.classList.remove('cols-2', 'cols-3');
+          grid.classList.add(view === 'grid-2' ? 'cols-2' : 'cols-3');
+        }
+      };
+
+      const showSingle = (i) => {
+        currentIndex = (i + photos.length) % photos.length;
+        const p = photos[currentIndex];
+        const token = ++loadToken;
+        setLoading(true);
+        singleImg.alt = p.alt;
+        singleCaption.textContent = p.caption || '';
+        counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+
+        const preload = new Image();
+        preload.onload = () => {
+          if (token !== loadToken) return;
+          singleImg.src = p.large;
+          setLoading(false);
+        };
+        preload.onerror = () => {
+          if (token !== loadToken) return;
+          setLoading(false);
+        };
+        preload.src = p.large;
+      };
+
+      buttons.forEach((b) =>
+        b.addEventListener('click', () => setView(b.dataset.view)),
+      );
+
+      grid.querySelectorAll('.photo-tile').forEach((tile) => {
+        tile.addEventListener('click', () => {
+          currentIndex = Number(tile.dataset.index) || 0;
+          setView('single');
+        });
+      });
+
+      prevBtn.addEventListener('click', () => showSingle(currentIndex - 1));
+      nextBtn.addEventListener('click', () => showSingle(currentIndex + 1));
+
+      document.addEventListener('keydown', (e) => {
+        if (root.classList.contains('hidden')) return;
+        if (single.classList.contains('hidden')) return;
+        if (e.key === 'ArrowLeft') showSingle(currentIndex - 1);
+        else if (e.key === 'ArrowRight') showSingle(currentIndex + 1);
+      });
+
+      const frame = single.querySelector('.single-frame');
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchActive = false;
+      frame.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchActive = true;
+      }, { passive: true });
+      frame.addEventListener('touchend', (e) => {
+        if (!touchActive) return;
+        touchActive = false;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          if (prevBtn.disabled || nextBtn.disabled) return;
+          if (dx < 0) showSingle(currentIndex + 1);
+          else showSingle(currentIndex - 1);
+        }
+      });
+    };
+
+    document.querySelectorAll('[data-gallery]').forEach((el) => setupGallery(el));
+
+    // Category tab switching
+    const tabs = document.querySelectorAll('.category-tab');
+    const sections = document.querySelectorAll('[data-gallery]');
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.category;
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        sections.forEach((s) => {
+          const active = s.dataset.gallery === id;
+          s.classList.toggle('hidden', !active);
+          s.setAttribute('aria-hidden', active ? 'false' : 'true');
+        });
+      });
     });
   })();
 </script>
@@ -228,7 +279,38 @@ const TAG = 'blog';
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .category-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--rule);
     margin-bottom: 1.5rem;
+  }
+  .category-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    padding: 0.6rem 1rem;
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .category-tab:hover { color: var(--ink); }
+  .category-tab.is-active {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+
+  .gallery-head {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    min-height: 2.25rem;
   }
 
   .view-toggle {
@@ -316,7 +398,7 @@ const TAG = 'blog';
     touch-action: pan-y;
     user-select: none;
   }
-  .single img {
+  .single-img {
     display: block;
     max-width: 100%;
     max-height: 100%;
@@ -325,7 +407,7 @@ const TAG = 'blog';
     object-fit: contain;
     transition: opacity 0.2s ease;
   }
-  .single img.is-loading { opacity: 0; }
+  .single-img.is-loading { opacity: 0; }
   .spinner {
     position: absolute;
     width: 36px;
@@ -339,18 +421,9 @@ const TAG = 'blog';
     transition: opacity 0.15s ease;
   }
   .spinner.is-visible { opacity: 1; }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  .nav-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .nav-btn:disabled:hover {
-    border-color: var(--rule);
-    color: var(--ink);
-  }
-  .single figcaption {
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .single-caption {
     padding: 0.75rem 0.25rem 0;
     font-size: 0.95rem;
   }
@@ -371,10 +444,9 @@ const TAG = 'blog';
     cursor: pointer;
     transition: border-color 0.15s ease, color 0.15s ease;
   }
-  .nav-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .nav-btn:disabled:hover { border-color: var(--rule); color: var(--ink); }
 
   .hidden { display: none !important; }
 
