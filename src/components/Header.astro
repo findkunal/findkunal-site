@@ -11,7 +11,12 @@ const links = [
 ---
 <header class="site-header">
   <div class="inner">
-    <a class="brand" href="/">Kunal</a>
+    <a class="brand" href="/" aria-label="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 11.5 12 4l9 7.5"/>
+        <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/>
+      </svg>
+    </a>
     <nav>
       {links.map((l) => (
         <a
@@ -40,12 +45,16 @@ const links = [
     flex-wrap: wrap;
   }
   .brand {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
     text-decoration: none;
-    letter-spacing: -0.01em;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: color 0.15s ease;
   }
+  .brand:hover { color: var(--accent); }
   nav {
     display: flex;
     gap: 1.1rem;
