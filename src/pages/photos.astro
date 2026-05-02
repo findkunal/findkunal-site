@@ -112,7 +112,7 @@ const galleries = [
         }));
       } catch (err) {
         console.warn(`[gallery:${tag}] Could not load Cloudinary list:`, err);
-        status.textContent = "Couldn't load this gallery right now. Please check back later.";
+        status.textContent = `Couldn't load ${tag} gallery: ${err?.message ?? err}`;
         return;
       }
 
