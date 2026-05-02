@@ -1,48 +1,82 @@
 ---
-// Pulls the latest posts from the blog's RSS feed at build time.
-// Fails gracefully if the feed isn't reachable (e.g., during early local dev).
-const FEED_URL = 'https://thoughts.findkunal.com/en/rss.xml';
-
-type Post = { title: string; link: string; pubDate?: string };
-let posts: Post[] = [];
-
-try {
-  const res = await fetch(FEED_URL);
-  if (res.ok) {
-    const xml = await res.text();
-    const items = xml.match(/<item[\s\S]*?<\/item>/g) ?? [];
-    posts = items.slice(0, 3).map((item) => {
-      const pick = (tag: string) => {
-        const m = item.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`));
-        if (!m) return '';
-        return m[1].replace(/^<!\[CDATA\[|\]\]>$/g, '').trim();
-      };
-      return { title: pick('title'), link: pick('link'), pubDate: pick('pubDate') };
-    });
-  }
-} catch {
-  posts = [];
-}
-
-const fmt = (d?: string) => {
-  if (!d) return '';
-  const date = new Date(d);
-  if (isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-};
+// Posts are loaded client-side so the section always reflects the live feed
+// without requiring a site rebuild after each new post.
 ---
-{posts.length > 0 ? (
-  <ul class="clean posts">
-    {posts.map((p) => (
-      <li>
-        <a href={p.link}>{p.title}</a>
-        {p.pubDate && <span class="muted"> · {fmt(p.pubDate)}</span>}
-      </li>
-    ))}
-  </ul>
-) : (
-  <p class="muted">Recent writing will appear here once the blog feed is live.</p>
-)}
+
+<ul class="clean posts" id="recent-posts-list">
+  <li id="posts-loading"><span class="muted">Loading recent posts…</span></li>
+</ul>
+
+<script>
+  (async () => {
+    const list = document.getElementById('recent-posts-list');
+    if (!list) return;
+
+    // Try feed URLs in order; use the first one that responds successfully.
+    const FEED_URLS = [
+      'https://thoughts.findkunal.com/en/rss.xml',
+      'https://thoughts.findkunal.com/rss/',
+      'https://thoughts.findkunal.com/feed/',
+    ];
+
+    const fmt = (dateStr: string) => {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    };
+
+    const makeLi = (title: string, link: string, pubDate: string) => {
+      const safeLink = (() => {
+        try {
+          const u = new URL(link);
+          return (u.protocol === 'https:' || u.protocol === 'http:') ? link : '#';
+        } catch { return '#'; }
+      })();
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = safeLink;
+      a.textContent = title;
+      li.appendChild(a);
+      const fmtDate = fmt(pubDate);
+      if (fmtDate) {
+        const span = document.createElement('span');
+        span.className = 'muted';
+        span.textContent = ` · ${fmtDate}`;
+        li.appendChild(span);
+      }
+      return li;
+    };
+
+    for (const url of FEED_URLS) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        const xml = await res.text();
+        const doc = new DOMParser().parseFromString(xml, 'text/xml');
+        const items = Array.from(doc.querySelectorAll('item')).slice(0, 3);
+        if (items.length === 0) continue;
+
+        list.innerHTML = '';
+        for (const item of items) {
+          const get = (tag: string) => {
+            const el = item.querySelector(tag);
+            if (!el) return '';
+            // Strip CDATA markers present in some RSS feeds
+            return (el.textContent ?? '').replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, '').trim();
+          };
+          list.appendChild(makeLi(get('title'), get('link'), get('pubDate')));
+        }
+        return;
+      } catch { /* try next URL */ }
+    }
+
+    // All URLs failed — show a graceful fallback
+    list.innerHTML = '';
+    const li = document.createElement('li');
+    li.innerHTML = 'Read essays at <a href="https://thoughts.findkunal.com">thoughts.findkunal.com</a>';
+    list.appendChild(li);
+  })();
+</script>
 
 <style>
   .posts li {
