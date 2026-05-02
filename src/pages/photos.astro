@@ -339,19 +339,20 @@ const galleries = [
   }
 
   .photo-grid {
-    column-gap: 0.5rem;
+    display: grid;
+    gap: 0.5rem;
     margin: 0 auto;
     padding: 0;
     max-width: 560px;
   }
-  .photo-grid.cols-3 { column-count: 3; }
+  .photo-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
   .photo-grid.cols-2 {
-    column-count: 2;
+    grid-template-columns: repeat(2, 1fr);
     max-width: 440px;
   }
   .photo-grid .photo {
-    break-inside: avoid;
-    margin-bottom: 0.5rem;
+    margin: 0;
+    min-width: 0;
   }
 
   .photo-tile {
@@ -368,6 +369,8 @@ const galleries = [
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
     transition: transform 0.3s ease, opacity 0.2s ease;
   }
   .photo-tile:hover img {
@@ -449,7 +452,7 @@ const galleries = [
   .nav-btn:disabled:hover { border-color: var(--rule); color: var(--ink); }
 
   .hidden { display: none !important; }
-
+grid-template-columns: repeat(2, 1fr)
   @media (max-width: 540px) {
     .photo-grid.cols-3 { column-count: 2; }
   }
