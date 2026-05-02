@@ -45,7 +45,7 @@ const photos = resources.map((r) => ({
   id: r.public_id,
   caption: r.context?.custom?.caption ?? '',
   alt: r.context?.custom?.alt ?? r.context?.custom?.caption ?? r.public_id,
-  thumb: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_fill,g_auto,w_800,h_800'),
+  thumb: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_fit,w_800,h_800'),
   large: cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_limit,w_1800,h_1800'),
 }));
 ---
@@ -104,7 +104,10 @@ const photos = resources.map((r) => ({
 
       <div id="photo-single" class="single hidden" aria-hidden="true">
         <figure>
-          <img id="single-img" src="" alt="" />
+          <div class="single-frame">
+            <div id="single-spinner" class="spinner" aria-hidden="true"></div>
+            <img id="single-img" src="" alt="" />
+          </div>
           <figcaption id="single-caption" class="muted"></figcaption>
         </figure>
         <div class="single-controls">
@@ -126,11 +129,20 @@ const photos = resources.map((r) => ({
     const singleImg = document.getElementById('single-img');
     const singleCaption = document.getElementById('single-caption');
     const counter = document.getElementById('single-counter');
+    const spinner = document.getElementById('single-spinner');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const buttons = document.querySelectorAll('.view-btn');
 
     let currentIndex = 0;
+    let loadToken = 0;
+
+    const setLoading = (loading) => {
+      spinner.classList.toggle('is-visible', loading);
+      singleImg.classList.toggle('is-loading', loading);
+      prevBtn.disabled = loading;
+      nextBtn.disabled = loading;
+    };
 
     const setView = (view) => {
       buttons.forEach((b) => b.classList.toggle('is-active', b.dataset.view === view));
@@ -151,10 +163,23 @@ const photos = resources.map((r) => ({
     const showSingle = (i) => {
       currentIndex = (i + photos.length) % photos.length;
       const p = photos[currentIndex];
-      singleImg.src = p.large;
+      const token = ++loadToken;
+      setLoading(true);
       singleImg.alt = p.alt;
       singleCaption.textContent = p.caption || '';
       counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+
+      const preload = new Image();
+      preload.onload = () => {
+        if (token !== loadToken) return;
+        singleImg.src = p.large;
+        setLoading(false);
+      };
+      preload.onerror = () => {
+        if (token !== loadToken) return;
+        setLoading(false);
+      };
+      preload.src = p.large;
     };
 
     buttons.forEach((b) =>
@@ -237,7 +262,8 @@ const photos = resources.map((r) => ({
     display: block;
     width: 100%;
     aspect-ratio: 1 / 1;
-    object-fit: cover;
+    object-fit: contain;
+    background: var(--rule);
     transition: transform 0.3s ease, opacity 0.2s ease;
   }
   .photo-tile:hover img {
@@ -255,15 +281,48 @@ const photos = resources.map((r) => ({
 
   .single figure {
     margin: 0;
+  }
+  .single-frame {
+    position: relative;
     border-radius: 8px;
     overflow: hidden;
     background: #000;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .single img {
     display: block;
     width: 100%;
     max-height: 80vh;
     object-fit: contain;
+    transition: opacity 0.2s ease;
+  }
+  .single img.is-loading { opacity: 0; }
+  .spinner {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .spinner.is-visible { opacity: 1; }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .nav-btn:disabled:hover {
+    border-color: var(--rule);
+    color: var(--ink);
   }
   .single figcaption {
     padding: 0.75rem 0.25rem 0;
