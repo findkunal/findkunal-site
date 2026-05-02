@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const CLOUD_NAME = 'dbi1tlqg3';
+const TAG = 'blog';
+
+type CloudinaryResource = {
+  public_id: string;
+  format: string;
+  version: number;
+  width: number;
+  height: number;
+  created_at: string;
+  context?: { custom?: { caption?: string; alt?: string } };
+};
+
+let resources: CloudinaryResource[] = [];
+let fetchError: string | null = null;
+
+try {
+  const res = await fetch(
+    `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${TAG}.json`,
+  );
+  if (!res.ok) {
+    throw new Error(`Cloudinary list returned ${res.status}`);
+  }
+  const data = (await res.json()) as { resources: CloudinaryResource[] };
+  resources = (data.resources ?? []).sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
+} catch (err) {
+  fetchError = err instanceof Error ? err.message : 'Failed to load photos.';
+  console.warn('[photos] Could not load Cloudinary list:', fetchError);
+}
+
+const cldUrl = (
+  publicId: string,
+  version: number,
+  format: string,
+  transforms: string,
+) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transforms}/v${version}/${publicId}.${format}`;
+---
+<BaseLayout
+  title="Photos — Kunal"
+  description="A small gallery of photos I've taken."
+>
+  <h1>Photos</h1>
+  <p class="lede">
+    A few moments worth keeping — pulled from my Cloudinary library.
+  </p>
+
+  {fetchError && (
+    <p class="muted">
+      Couldn't load the gallery right now. Please check back later.
+    </p>
+  )}
+
+  {!fetchError && resources.length === 0 && (
+    <p class="muted">No photos yet — check back soon.</p>
+  )}
+
+  {resources.length > 0 && (
+    <ul class="photo-grid clean">
+      {resources.map((r) => {
+        const caption = r.context?.custom?.caption;
+        const alt = r.context?.custom?.alt ?? caption ?? r.public_id;
+        const thumb = cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_fill,g_auto,w_800,h_800');
+        const full = cldUrl(r.public_id, r.version, r.format, 'f_auto,q_auto,c_limit,w_1800');
+        return (
+          <li class="photo">
+            <a href={full} target="_blank" rel="noopener">
+              <img
+                src={thumb}
+                alt={alt}
+                loading="lazy"
+                decoding="async"
+                width={800}
+                height={800}
+              />
+              {caption && <span class="caption">{caption}</span>}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  )}
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .photo a {
+    display: block;
+    text-decoration: none;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--rule);
+  }
+
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+
+  .photo a:hover img {
+    transform: scale(1.03);
+    opacity: 0.95;
+  }
+
+  .caption {
+    display: block;
+    padding: 0.4rem 0.1rem 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  @media (min-width: 720px) {
+    .photo-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+  }
+</style>
