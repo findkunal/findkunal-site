@@ -4,6 +4,11 @@ export type FavoriteItem = {
   link?: string;
   note?: string;
   isbn?: string;
+  /**
+   * Poster image. Either a full URL, or a Cloudinary public ID
+   * (e.g. `posters/pantheon`) which is auto-expanded to a 400x600
+   * f_auto/q_auto delivery URL on the favorites page.
+   */
   poster?: string;
   year?: string;
   featured?: boolean;

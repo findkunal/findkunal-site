@@ -1,6 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { favorites } from '../data/favorites';
+
+const CLOUDINARY_CLOUD = 'dbi1tlqg3';
+
+/**
+ * Resolve a `poster` value to a URL.
+ * - If it's a full URL (http/https), use it as-is.
+ * - Otherwise treat it as a Cloudinary public ID and build a delivery URL.
+ *   Defaults to a 2:3 poster-shaped, auto-format/auto-quality, 400-wide image.
+ */
+function resolvePoster(poster: string): string {
+  if (/^https?:\/\//i.test(poster)) return poster;
+  const id = poster.replace(/^\/+/, '');
+  const transforms = 'f_auto,q_auto,w_400,h_600,c_fill,g_auto';
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload/${transforms}/${id}`;
+}
 ---
 <BaseLayout title="Favorites — Kunal" description="A curated list of things that shaped my thinking.">
   <h1>Favorites</h1>
@@ -30,11 +45,12 @@ import { favorites } from '../data/favorites';
               .slice(0, 2)
               .map((w) => w[0]?.toUpperCase())
               .join('');
+            const posterSrc = item.poster ? resolvePoster(item.poster) : null;
             return (
               <li class:list={['card', { featured: item.featured }]}>
                 <div class="poster-wrap">
-                  {item.poster ? (
-                    <img class="poster" src={item.poster} alt={`Poster of ${item.title}`} loading="lazy" />
+                  {posterSrc ? (
+                    <img class="poster" src={posterSrc} alt={`Poster of ${item.title}`} loading="lazy" />
                   ) : (
                     <div class="poster placeholder" aria-hidden="true">
                       <span>{initials}</span>
