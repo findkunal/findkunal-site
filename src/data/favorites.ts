@@ -22,7 +22,7 @@ export const favorites: FavoriteSection[] = [
       {
         title: 'Triggers',
         by: 'Marshall Goldsmith',
-        isbn: '9780804141383',
+        isbn: '9780804141369',
         link: 'https://www.goodreads.com/book/show/22788824-triggers',
         note: 'On the behavioral triggers that shape who we become \u2014 and how to take control of them.',
       },
@@ -36,7 +36,7 @@ export const favorites: FavoriteSection[] = [
       {
         title: 'Siddhartha',
         by: 'Hermann Hesse',
-        isbn: '9780553208498',
+        isbn: '9780811200684',
         link: 'https://www.goodreads.com/book/show/52036.Siddhartha',
         note: 'A short novel about searching for meaning. Re-read it every few years.',
       },
@@ -57,7 +57,7 @@ export const favorites: FavoriteSection[] = [
       {
         title: 'Meditations',
         by: 'Marcus Aurelius',
-        isbn: '9780140449334',
+        isbn: '9780812968255',
         link: 'https://www.goodreads.com/book/show/30659.Meditations',
         note: 'The original journal of someone trying to be a better human, in public.',
       },

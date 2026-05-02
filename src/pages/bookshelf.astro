@@ -69,6 +69,7 @@ const stars = (n?: number) => (n ? '★'.repeat(n) + '☆'.repeat(5 - n) : '');
                       width="48"
                       loading="lazy"
                       onerror="this.style.display='none'"
+                      onload="if(this.naturalWidth<=1||this.naturalHeight<=1)this.style.display='none'"
                     />
                   )}
                   <div class="info">
