@@ -41,7 +41,7 @@
       if (fmtDate) {
         const span = document.createElement('span');
         span.className = 'muted';
-        span.textContent = ` · ${fmtDate}`;
+        span.textContent = fmtDate;
         li.appendChild(span);
       }
       return li;
@@ -79,11 +79,27 @@
 </script>
 
 <style>
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
   .posts li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
     padding: 0.9rem 0;
     border-bottom: 1px solid var(--rule);
     line-height: 1.5;
   }
-  .posts li:first-child { padding-top: 0.4rem; }
+  .posts li:first-child { padding-top: 0.25rem; }
   .posts li:last-child { border-bottom: none; }
+  .posts li a {
+    font-size: 1.02rem;
+  }
+  .posts li .muted {
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
 </style>
