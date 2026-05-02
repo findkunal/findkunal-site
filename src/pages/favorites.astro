@@ -20,19 +20,36 @@ import { favorites } from '../data/favorites';
       <h2>{section.heading}</h2>
       {section.description && <p class="muted">{section.description}</p>}
       <ul class="clean items">
-        {section.items.map((item) => (
-          <li>
-            <div class="title">
-              {item.link ? (
-                <a href={item.link} rel="noopener">{item.title}</a>
-              ) : (
-                <span>{item.title}</span>
+        {section.items.map((item) => {
+          const coverSrc = item.isbn
+            ? `https://covers.openlibrary.org/b/isbn/${item.isbn}-M.jpg`
+            : null;
+          return (
+            <li class={coverSrc ? 'has-cover' : ''}>
+              {coverSrc && (
+                <img
+                  class="cover"
+                  src={coverSrc}
+                  alt={`Cover of ${item.title}`}
+                  width="48"
+                  loading="lazy"
+                  onerror="this.style.display='none'"
+                />
               )}
-              {item.by && <span class="muted by"> — {item.by}</span>}
-            </div>
-            {item.note && <p class="note muted">{item.note}</p>}
-          </li>
-        ))}
+              <div class="body">
+                <div class="title">
+                  {item.link ? (
+                    <a href={item.link} rel="noopener">{item.title}</a>
+                  ) : (
+                    <span>{item.title}</span>
+                  )}
+                  {item.by && <span class="muted by"> — {item.by}</span>}
+                </div>
+                {item.note && <p class="note muted">{item.note}</p>}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   ))}
@@ -55,8 +72,20 @@ import { favorites } from '../data/favorites';
   .items li {
     padding: 0.7rem 0;
     border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
   }
   .items li:last-child { border-bottom: none; }
+  .cover {
+    width: 48px;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .body { flex: 1; min-width: 0; }
   .title { font-size: 1rem; }
   .by { font-style: italic; }
   .note { margin: 0.25rem 0 0; font-size: 0.9rem; }

@@ -26,6 +26,7 @@ const books = defineCollection({
     started: z.string().optional(),
     finished: z.string().optional(),
     rating: z.number().min(1).max(5).optional(),
+    isbn: z.string().optional(),
     link: z.string().url().optional(),
     note: z.string().optional(),
   }),

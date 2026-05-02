@@ -55,24 +55,39 @@ const stars = (n?: number) => (n ? '★'.repeat(n) + '☆'.repeat(5 - n) : '');
             ) : (
               <span>{b.data.title}</span>
             );
+            const coverSrc = b.data.isbn
+              ? `https://covers.openlibrary.org/b/isbn/${b.data.isbn}-M.jpg`
+              : null;
             return (
               <li>
                 <div class="row">
-                  <div class="title">
-                    {titleEl}
-                    <span class="muted by"> — {b.data.author}</span>
+                  {coverSrc && (
+                    <img
+                      class="cover"
+                      src={coverSrc}
+                      alt={`Cover of ${b.data.title}`}
+                      width="48"
+                      loading="lazy"
+                      onerror="this.style.display='none'"
+                    />
+                  )}
+                  <div class="info">
+                    <div class="title">
+                      {titleEl}
+                      <span class="muted by"> — {b.data.author}</span>
+                    </div>
+                    {(date || b.data.note) && (
+                      <div class="meta muted">
+                        {date && <span>{date}</span>}
+                        {date && b.data.note && <span> · </span>}
+                        {b.data.note && <span>{b.data.note}</span>}
+                      </div>
+                    )}
                   </div>
                   {b.data.rating && (
                     <span class="rating" title={`${b.data.rating} of 5`}>{stars(b.data.rating)}</span>
                   )}
                 </div>
-                {(date || b.data.note) && (
-                  <div class="meta muted">
-                    {date && <span>{date}</span>}
-                    {date && b.data.note && <span> · </span>}
-                    {b.data.note && <span>{b.data.note}</span>}
-                  </div>
-                )}
               </li>
             );
           })}
@@ -103,11 +118,18 @@ const stars = (n?: number) => (n ? '★'.repeat(n) + '☆'.repeat(5 - n) : '');
   .books li:last-child { border-bottom: none; }
   .row {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.9rem;
   }
+  .cover {
+    width: 48px;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .info { flex: 1; min-width: 0; }
   .title { font-size: 1rem; }
   .by { font-style: italic; }
   .rating {
@@ -115,6 +137,7 @@ const stars = (n?: number) => (n ? '★'.repeat(n) + '☆'.repeat(5 - n) : '');
     letter-spacing: 0.1em;
     font-size: 0.85rem;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   .meta {
     margin-top: 0.2rem;
