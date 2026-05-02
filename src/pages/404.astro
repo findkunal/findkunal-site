@@ -1,12 +1,70 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const quotes = [
+  {
+    text: '"You have power over your mind — not outside events. Realize this, and you will find strength."',
+    by: 'Marcus Aurelius',
+  },
+  {
+    text: '"We suffer more often in imagination than in reality."',
+    by: 'Seneca',
+  },
+  {
+    text: '"The impediment to action advances action. What stands in the way becomes the way."',
+    by: 'Marcus Aurelius',
+  },
+];
+
+const pick = quotes[Math.floor(Math.random() * quotes.length)];
 ---
-<BaseLayout title="Not found — Kunal" description="Page not found.">
-  <h1>404</h1>
-  <p class="lede">That page doesn't exist (or hasn't been written yet).</p>
-  <p><a href="/">← Back home</a></p>
+<BaseLayout title="Lost — Kunal" description="This page wandered off.">
+  <p class="kicker">404</p>
+  <h1>This page took a detour.</h1>
+  <p class="lede">
+    Either it doesn't exist yet, or it's a typo, or some link aged out. Either way,
+    you're here now — which is a fine place to be.
+  </p>
+
+  <blockquote>
+    <p>{pick.text}</p>
+    <cite>— {pick.by}</cite>
+  </blockquote>
+
+  <h2>Try one of these</h2>
+  <ul class="clean links">
+    <li><a href="/">Home</a> — the front door.</li>
+    <li><a href="/about">About</a> — a little about me.</li>
+    <li><a href="https://thoughts.findkunal.com/en/">Writing</a> — essays I'm chewing on.</li>
+    <li><a href="/photos">Photos</a> — a few moments worth keeping.</li>
+    <li><a href="/bookshelf">Bookshelf</a> — what I'm reading.</li>
+    <li><a href="/favorites">Favorites</a> — books, podcasts, tools I love.</li>
+    <li><a href="/contact">Contact</a> — say hello.</li>
+  </ul>
 </BaseLayout>
 
 <style>
-  .lede { font-size: 1.1rem; color: var(--muted); }
+  .lede { font-size: 1.1rem; color: var(--muted); max-width: 38rem; }
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 0 0.5rem 1.25rem;
+    margin: 2rem 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  blockquote p { margin: 0 0 0.4rem; }
+  blockquote cite {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: normal;
+  }
+  .links li {
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .links li:last-child { border-bottom: none; }
 </style>

@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const all = await getCollection('books');
+
+const fmt = (d?: string) => {
+  if (!d) return '';
+  const dt = new Date(d);
+  if (isNaN(dt.getTime())) return d;
+  return dt.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+};
+
+const sortDesc = (a: string | undefined, b: string | undefined) =>
+  (b ?? '').localeCompare(a ?? '');
+
+const reading = all
+  .filter((b) => b.data.status === 'reading')
+  .sort((a, b) => sortDesc(a.data.started, b.data.started));
+const finished = all
+  .filter((b) => b.data.status === 'finished')
+  .sort((a, b) => sortDesc(a.data.finished, b.data.finished));
+const wantToRead = all
+  .filter((b) => b.data.status === 'want-to-read')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const sections = [
+  { heading: 'Currently reading', items: reading, showDate: 'started' as const },
+  { heading: 'Recently finished', items: finished, showDate: 'finished' as const },
+  { heading: 'Want to read', items: wantToRead, showDate: null },
+];
+
+const stars = (n?: number) => (n ? '★'.repeat(n) + '☆'.repeat(5 - n) : '');
+---
+<BaseLayout title="Bookshelf — Kunal" description="What I'm reading.">
+  <h1>Bookshelf</h1>
+  <p class="lede">
+    What I'm reading, what I've finished, and what I'm hoping to get to next.
+  </p>
+
+  {sections.map((sec) =>
+    sec.items.length > 0 ? (
+      <section class="shelf">
+        <h2>{sec.heading}</h2>
+        <ul class="clean books">
+          {sec.items.map((b) => {
+            const date =
+              sec.showDate === 'started'
+                ? fmt(b.data.started)
+                : sec.showDate === 'finished'
+                  ? fmt(b.data.finished)
+                  : '';
+            const titleEl = b.data.link ? (
+              <a href={b.data.link} rel="noopener">{b.data.title}</a>
+            ) : (
+              <span>{b.data.title}</span>
+            );
+            return (
+              <li>
+                <div class="row">
+                  <div class="title">
+                    {titleEl}
+                    <span class="muted by"> — {b.data.author}</span>
+                  </div>
+                  {b.data.rating && (
+                    <span class="rating" title={`${b.data.rating} of 5`}>{stars(b.data.rating)}</span>
+                  )}
+                </div>
+                {(date || b.data.note) && (
+                  <div class="meta muted">
+                    {date && <span>{date}</span>}
+                    {date && b.data.note && <span> · </span>}
+                    {b.data.note && <span>{b.data.note}</span>}
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ) : null,
+  )}
+
+  {all.length === 0 && (
+    <p class="muted">No books on the shelf yet.</p>
+  )}
+
+  <hr />
+  <p class="muted small">
+    Books live as markdown files in <code>src/content/books/</code>. Add one with
+    <code>title</code>, <code>author</code>, and a <code>status</code> of
+    <code>reading</code>, <code>finished</code>, or <code>want-to-read</code>.
+  </p>
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); }
+  .shelf { margin-top: 2rem; }
+  .books li {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .books li:last-child { border-bottom: none; }
+  .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .title { font-size: 1rem; }
+  .by { font-style: italic; }
+  .rating {
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .meta {
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+  }
+  .small { font-size: 0.85rem; }
+  code {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+</style>

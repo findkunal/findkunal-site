@@ -17,4 +17,18 @@ const apps = defineCollection({
   }),
 });
 
-export const collections = { apps };
+const books = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/books' }),
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    status: z.enum(['reading', 'finished', 'want-to-read']).default('reading'),
+    started: z.string().optional(),
+    finished: z.string().optional(),
+    rating: z.number().min(1).max(5).optional(),
+    link: z.string().url().optional(),
+    note: z.string().optional(),
+  }),
+});
+
+export const collections = { apps, books };

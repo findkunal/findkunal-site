@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { favorites } from '../data/favorites';
+---
+<BaseLayout title="Favorites — Kunal" description="A curated list of things that shaped my thinking.">
+  <h1>Favorites</h1>
+  <p class="lede">
+    Books, podcasts, essays, and tools I keep coming back to. A small map of what
+    I've found worth recommending.
+  </p>
+
+  <nav class="toc" aria-label="Sections">
+    {favorites.map((s) => (
+      <a href={`#${s.id}`}>{s.heading}</a>
+    ))}
+  </nav>
+
+  {favorites.map((section) => (
+    <section id={section.id} class="section">
+      <h2>{section.heading}</h2>
+      {section.description && <p class="muted">{section.description}</p>}
+      <ul class="clean items">
+        {section.items.map((item) => (
+          <li>
+            <div class="title">
+              {item.link ? (
+                <a href={item.link} rel="noopener">{item.title}</a>
+              ) : (
+                <span>{item.title}</span>
+              )}
+              {item.by && <span class="muted by"> — {item.by}</span>}
+            </div>
+            {item.note && <p class="note muted">{item.note}</p>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>
+
+<style>
+  .lede { font-size: 1.1rem; color: var(--muted); }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 1.5rem 0 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9rem;
+  }
+  .toc a { color: var(--muted); text-decoration: none; }
+  .toc a:hover { color: var(--ink); }
+  .section { margin-top: 2.5rem; scroll-margin-top: 1.5rem; }
+  .items li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .items li:last-child { border-bottom: none; }
+  .title { font-size: 1rem; }
+  .by { font-style: italic; }
+  .note { margin: 0.25rem 0 0; font-size: 0.9rem; }
+</style>
