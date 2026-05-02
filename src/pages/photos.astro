@@ -350,12 +350,13 @@ const galleries = [
     grid-template-columns: repeat(2, 1fr);
     max-width: 440px;
   }
-  .photo-grid .photo {
+  .photo-grid :global(.photo) {
     margin: 0;
     min-width: 0;
+    list-style: none;
   }
 
-  .photo-tile {
+  .photo-grid :global(.photo-tile) {
     display: block;
     width: 100%;
     padding: 0;
@@ -365,7 +366,7 @@ const galleries = [
     overflow: hidden;
     cursor: pointer;
   }
-  .photo-tile img {
+  .photo-grid :global(.photo-tile img) {
     display: block;
     width: 100%;
     height: auto;
@@ -373,11 +374,11 @@ const galleries = [
     object-fit: cover;
     transition: transform 0.3s ease, opacity 0.2s ease;
   }
-  .photo-tile:hover img {
+  .photo-grid :global(.photo-tile:hover img) {
     transform: scale(1.03);
     opacity: 0.95;
   }
-  .caption {
+  .photo-grid :global(.caption) {
     display: block;
     padding: 0.4rem 0.1rem 0;
     font-size: 0.8rem;
