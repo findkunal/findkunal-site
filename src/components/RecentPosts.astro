@@ -84,7 +84,7 @@
     flex-direction: column;
     gap: 0.25rem;
   }
-  .posts li {
+  .posts :global(li) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -93,12 +93,12 @@
     border-bottom: 1px solid var(--rule);
     line-height: 1.5;
   }
-  .posts li:first-child { padding-top: 0.25rem; }
-  .posts li:last-child { border-bottom: none; }
-  .posts li a {
+  .posts :global(li:first-child) { padding-top: 0.25rem; }
+  .posts :global(li:last-child) { border-bottom: none; }
+  .posts :global(li a) {
     font-size: 1.02rem;
   }
-  .posts li .muted {
+  .posts :global(li .muted) {
     font-size: 0.72rem;
     letter-spacing: 0.04em;
   }
