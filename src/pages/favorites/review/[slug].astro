@@ -15,6 +15,9 @@ function resolvePoster(poster: string): string {
 }
 
 export function getStaticPaths() {
+  function slugify(title: string) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
   const paths = [];
   for (const section of favorites) {
     for (const item of section.items) {
