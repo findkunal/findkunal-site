@@ -146,6 +146,7 @@ export const favorites: FavoriteSection[] = [
         year: '2024',
         link: 'https://www.themoviedb.org/movie/1052999',
         poster: 'https://media.themoviedb.org/t/p/w500/i26w8yFGOpCoSloroeKQjpqlsG3.jpg',
+        review: `This film lives in the grey area. At its center is a man haunted by the possibility that he may have done something terrible — and now finds himself on the jury deciding someone else's fate for the very act he fears he committed. That setup alone is enough to keep you riveted.\n\nWhat makes it linger is how honest it is about the struggle. He has everything to lose — a life he loves, a family he'd do anything for — and a guilt that won't let him rest. The tension between doing what's right and protecting yourself is so familiar it hurts. We've all stood at some version of that line. Most of us have just been lucky enough that the stakes were lower.\n\nThe pendulum of morality swings throughout. Just when you think you know where you stand, the film shifts your footing again. I also loved how it portrayed the other jurors — each one a small window into how people weigh evidence, conscience, and self-interest differently. It reminded me that justice is never as clean as we pretend.\n\nOne could only wish that no one has to face a moral dilemma like this. This one stayed with me for a while after the credits rolled. Absolutely worth your time.`,
       },
       {
         title: 'Parasite',
