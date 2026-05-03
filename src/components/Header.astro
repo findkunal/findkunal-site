@@ -20,7 +20,9 @@ const links = [
         <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/>
       </svg>
     </a>
-    <nav>
+
+    <!-- Desktop nav -->
+    <nav class="desktop-nav" aria-label="Primary">
       {links.map((l) => (
         <a
           href={l.href}
@@ -29,13 +31,80 @@ const links = [
         >{l.label}</a>
       ))}
     </nav>
+
+    <!-- Mobile burger -->
+    <button
+      class="burger"
+      id="nav-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      type="button"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6"  x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
   </div>
+
+  <!-- Mobile drawer -->
+  <nav
+    id="mobile-menu"
+    class="mobile-nav"
+    aria-label="Primary"
+    hidden
+  >
+    {links.map((l) => (
+      <a
+        href={l.href}
+        class:list={['mobile-link', { active: !l.external && isActive(l.href) }]}
+        {...l.external ? { rel: 'noopener', target: '_self' } : {}}
+      >{l.label}</a>
+    ))}
+  </nav>
 </header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle')!;
+  const menu   = document.getElementById('mobile-menu')!;
+
+  toggle.addEventListener('click', () => {
+    const open = menu.hidden;
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+
+  // Close when a link is tapped
+  menu.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', () => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+    });
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!menu.hidden && !menu.contains(e.target as Node) && e.target !== toggle) {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+    }
+  });
+</script>
 
 <style>
   .site-header {
     border-bottom: 1px solid var(--rule);
     background: var(--bg);
+    /* Stick to top so mobile menu overlays content below */
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
   .inner {
     max-width: var(--max);
@@ -44,8 +113,6 @@ const links = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
   }
   .brand {
     display: inline-flex;
@@ -58,7 +125,9 @@ const links = [
     transition: color 0.15s ease;
   }
   .brand:hover { color: var(--accent); }
-  nav {
+
+  /* Desktop nav — visible on wide screens */
+  .desktop-nav {
     display: flex;
     gap: 1.1rem;
     flex-wrap: wrap;
@@ -70,4 +139,44 @@ const links = [
   }
   .nav-link:hover { color: var(--ink); }
   .nav-link.active { color: var(--ink); }
+
+  /* Burger — hidden on wide screens */
+  .burger {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: color 0.15s ease;
+  }
+  .burger:hover { color: var(--accent); }
+
+  /* Mobile drawer */
+  .mobile-nav {
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+    padding: 0.75rem 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .mobile-link {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 1rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--rule);
+    transition: color 0.15s ease;
+  }
+  .mobile-link:last-child { border-bottom: none; }
+  .mobile-link:hover { color: var(--ink); }
+  .mobile-link.active { color: var(--ink); font-weight: 500; }
+
+  /* Switch to burger below 600 px */
+  @media (max-width: 600px) {
+    .desktop-nav { display: none; }
+    .burger { display: inline-flex; }
+  }
 </style>
