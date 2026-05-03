@@ -24,12 +24,6 @@ function resolvePoster(poster: string): string {
     small map of what I've found worth recommending.
   </p>
 
-  <nav class="toc" aria-label="Sections">
-    {favorites.map((s) => (
-      <a href={`#${s.id}`} data-section-link={s.id}>{s.heading}</a>
-    ))}
-  </nav>
-
   <div class="accordion">
   {favorites.map((section, i) => (
     <details id={section.id} class="accordion-item section" open={i === 0} data-section={section.id}>
@@ -142,34 +136,14 @@ function resolvePoster(poster: string): string {
           });
         }
       }
-      // Open the linked section on page load and on TOC clicks.
       openFromHash();
       window.addEventListener('hashchange', openFromHash);
-      document.querySelectorAll('[data-section-link]').forEach(function (a) {
-        a.addEventListener('click', function () {
-          var id = a.getAttribute('data-section-link');
-          var el = document.getElementById(id);
-          if (el && el.tagName === 'DETAILS') el.open = true;
-        });
-      });
     })();
   </script>
 </BaseLayout>
 
 <style>
   .lede { font-size: 1.1rem; color: var(--muted); }
-  .toc {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    margin: 1.5rem 0 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--rule);
-    font-size: 0.9rem;
-  }
-  .toc a { color: var(--muted); text-decoration: none; }
-  .toc a:hover { color: var(--ink); }
-
   /* Accordion */
   .accordion {
     border: 1px solid var(--rule);
