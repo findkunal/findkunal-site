@@ -15,13 +15,13 @@ const links = [
 <header class="site-header">
   <div class="inner">
     <a class="brand" href="/" aria-label="Home">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M3 11.5 12 4l9 7.5"/>
         <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/>
       </svg>
     </a>
 
-    <!-- Desktop nav -->
     <nav class="desktop-nav" aria-label="Primary">
       {links.map((l) => (
         <a
@@ -32,15 +32,8 @@ const links = [
       ))}
     </nav>
 
-    <!-- Mobile burger -->
-    <button
-      class="burger"
-      id="nav-toggle"
-      aria-label="Open menu"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-      type="button"
-    >
+    <button class="burger" id="nav-toggle" type="button"
+      aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
         <line x1="3" y1="6"  x2="21" y2="6"/>
@@ -50,13 +43,7 @@ const links = [
     </button>
   </div>
 
-  <!-- Mobile drawer -->
-  <nav
-    id="mobile-menu"
-    class="mobile-nav"
-    aria-label="Primary"
-    hidden
-  >
+  <nav id="mobile-menu" class="mobile-nav" aria-label="Primary">
     {links.map((l) => (
       <a
         href={l.href}
@@ -67,45 +54,49 @@ const links = [
   </nav>
 </header>
 
-<script>
-  const toggle = document.getElementById('nav-toggle')!;
-  const menu   = document.getElementById('mobile-menu')!;
+<script is:inline>
+  (function () {
+    var toggle = document.getElementById('nav-toggle');
+    var menu   = document.getElementById('mobile-menu');
+    if (!toggle || !menu) return;
 
-  toggle.addEventListener('click', () => {
-    const open = menu.hidden;
-    menu.hidden = !open;
-    toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  });
-
-  // Close when a link is tapped
-  menu.querySelectorAll('a').forEach((a) => {
-    a.addEventListener('click', () => {
-      menu.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Open menu');
-    });
-  });
-
-  // Close when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!menu.hidden && !menu.contains(e.target as Node) && e.target !== toggle) {
-      menu.hidden = true;
+    function open() {
+      menu.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close menu');
+    }
+    function close() {
+      menu.classList.remove('is-open');
       toggle.setAttribute('aria-expanded', 'false');
       toggle.setAttribute('aria-label', 'Open menu');
     }
-  });
+
+    toggle.addEventListener('click', function () {
+      menu.classList.contains('is-open') ? close() : open();
+    });
+
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', close);
+    });
+
+    document.addEventListener('click', function (e) {
+      if (menu.classList.contains('is-open') &&
+          !menu.contains(e.target) && e.target !== toggle) {
+        close();
+      }
+    });
+  })();
 </script>
 
 <style>
   .site-header {
-    border-bottom: 1px solid var(--rule);
-    background: var(--bg);
-    /* Stick to top so mobile menu overlays content below */
     position: sticky;
     top: 0;
     z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
   }
+
   .inner {
     max-width: var(--max);
     margin: 0 auto;
@@ -113,20 +104,23 @@ const links = [
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
   }
+
+  /* Brand */
   .brand {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     color: var(--ink);
     text-decoration: none;
     padding: 0.25rem;
     border-radius: 6px;
-    transition: color 0.15s ease;
+    flex-shrink: 0;
+    transition: color 0.15s;
   }
   .brand:hover { color: var(--accent); }
 
-  /* Desktop nav — visible on wide screens */
+  /* Desktop nav */
   .desktop-nav {
     display: flex;
     gap: 1.1rem;
@@ -136,8 +130,9 @@ const links = [
     text-decoration: none;
     color: var(--muted);
     font-size: 0.95rem;
+    transition: color 0.15s;
   }
-  .nav-link:hover { color: var(--ink); }
+  .nav-link:hover,
   .nav-link.active { color: var(--ink); }
 
   /* Burger — hidden on wide screens */
@@ -149,35 +144,35 @@ const links = [
     padding: 0.25rem;
     cursor: pointer;
     border-radius: 6px;
-    transition: color 0.15s ease;
+    flex-shrink: 0;
+    transition: color 0.15s;
   }
   .burger:hover { color: var(--accent); }
 
-  /* Mobile drawer */
-  .mobile-nav[hidden] { display: none; }
+  /* Mobile drawer — hidden until .is-open */
   .mobile-nav {
-    border-top: 1px solid var(--rule);
-    background: var(--bg);
-    padding: 0.75rem 1.25rem 1rem;
-    display: flex;
+    display: none;
     flex-direction: column;
-    gap: 0.1rem;
+    border-top: 1px solid var(--rule);
+    padding: 0.5rem 1.25rem 1rem;
   }
+  .mobile-nav.is-open { display: flex; }
+
   .mobile-link {
     text-decoration: none;
     color: var(--muted);
     font-size: 1rem;
-    padding: 0.55rem 0;
+    padding: 0.6rem 0;
     border-bottom: 1px solid var(--rule);
-    transition: color 0.15s ease;
+    transition: color 0.15s;
   }
   .mobile-link:last-child { border-bottom: none; }
-  .mobile-link:hover { color: var(--ink); }
-  .mobile-link.active { color: var(--ink); font-weight: 500; }
+  .mobile-link:hover,
+  .mobile-link.active { color: var(--ink); }
 
-  /* Switch to burger below 600 px */
+  /* Swap nav ↔ burger below 600 px */
   @media (max-width: 600px) {
     .desktop-nav { display: none; }
-    .burger { display: inline-flex; }
+    .burger      { display: inline-flex; }
   }
 </style>
