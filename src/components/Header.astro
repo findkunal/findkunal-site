@@ -81,7 +81,7 @@ const links = [
 
     document.addEventListener('click', function (e) {
       if (menu.classList.contains('is-open') &&
-          !menu.contains(e.target) && e.target !== toggle) {
+          !menu.contains(e.target) && !toggle.contains(e.target)) {
         close();
       }
     });
