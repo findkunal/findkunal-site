@@ -215,8 +215,7 @@ export const favorites: FavoriteSection[] = [
         by: 'Craig Silverstein',
         year: '2022–2023',
         featured: true,
-        link: 'https://www.themoviedb.org/tv/110381',
-        poster: 'https://media.themoviedb.org/t/p/w500/1tQ2wVVKoma672CxE2kfl9oxHR8.jpg',
+        link: 'https://www.themoviedb.org/tv/195339-pantheon',
         note: "This one sits very close to my heart. Pantheon takes the question I've been chewing on for years — what makes you, you? — and answers it with the seriousness it deserves. It treats consciousness, grief, family, and identity as engineering problems and as spiritual ones at the same time, without flinching from either. The final stretch is one of the most ambitious things I've seen on a screen: it scales from a single father-daughter conversation to the fate of the universe, and somehow earns every step. I don't know another show that takes ideas this big and stays this human.",
       },
       {
