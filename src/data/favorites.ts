@@ -12,6 +12,7 @@ export type FavoriteItem = {
   poster?: string;
   year?: string;
   featured?: boolean;
+  review?: string;
 };
 
 export type FavoriteSection = {
@@ -130,6 +131,7 @@ export const favorites: FavoriteSection[] = [
         year: '2016',
         link: 'https://www.themoviedb.org/movie/334533',
         poster: 'https://media.themoviedb.org/t/p/w500/2sFME73GaD8UsUxPUKe60cPdLif.jpg',
+        review: `I stumbled upon this film while searching for something in the spirit of Little Miss Sunshine, expecting a light, easygoing family movie. What I got instead was something far bolder — a genuinely thought-provoking exploration of how we raise our children.\n\nThe father in this story takes a strikingly unconventional approach to parenting. His kids aren't just taught to survive in the physical world — they're pushed to truly understand ideas, not merely memorize them. The result is children who can hold their own in deep, substantive conversations. What struck me most was the radical honesty woven into their family dynamic. It feels raw, even uncomfortable at times, but also refreshingly real.\n\nIt got me thinking about how often we shield children from difficulty in the name of protection — and whether that sheltering quietly makes them more fragile in the long run. Life's harder truths have a way of finding everyone eventually. The difference is whether you're prepared for them or blindsided by them.\n\nThis film made me question a lot of my own assumptions about parenthood. It's the kind of movie that lingers with you well after the credits roll. Thought-provoking, honest, and absolutely worth your time.`,
       },
       {
         title: 'Little Miss Sunshine',
