@@ -4,6 +4,10 @@ import { favorites } from '../data/favorites';
 
 const CLOUDINARY_CLOUD = 'dbi1tlqg3';
 
+function slugify(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 /**
  * Resolve a `poster` value to a URL.
  * - If it's a full URL (http/https), use it as-is.
@@ -78,12 +82,7 @@ function resolvePoster(poster: string): string {
                   </div>
                   {item.note && <p class="card-note muted">{item.note}</p>}
                   {item.review && (
-                    <details class="review">
-                      <summary class="review-toggle">My take</summary>
-                      <div class="review-body">
-                        {item.review.split('\n\n').map((para) => <p>{para}</p>)}
-                      </div>
-                    </details>
+                    <a class="review-link" href={`/favorites/review/${slugify(item.title)}`}>My take →</a>
                   )}
                 </div>
               </li>
@@ -120,12 +119,7 @@ function resolvePoster(poster: string): string {
                   </div>
                   {item.note && <p class="note muted">{item.note}</p>}
                   {item.review && (
-                    <details class="review">
-                      <summary class="review-toggle">My take</summary>
-                      <div class="review-body">
-                        {item.review.split('\n\n').map((para) => <p>{para}</p>)}
-                      </div>
-                    </details>
+                    <a class="review-link" href={`/favorites/review/${slugify(item.title)}`}>My take →</a>
                   )}
                 </div>
               </li>
@@ -275,29 +269,14 @@ function resolvePoster(poster: string): string {
     letter-spacing: 0.04em;
     opacity: 0.85;
   }
-  /* Review toggle */
-  .review { margin-top: 0.6rem; }
-  .review-toggle {
+  .review-link {
+    display: inline-block;
+    margin-top: 0.45rem;
     font-size: 0.8rem;
     color: var(--accent);
-    cursor: pointer;
-    list-style: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    user-select: none;
+    text-decoration: none;
   }
-  .review-toggle::-webkit-details-marker { display: none; }
-  .review-toggle::before { content: '▸'; font-size: 0.65rem; transition: transform 0.15s; }
-  details[open] > .review-toggle::before { transform: rotate(90deg); }
-  .review-body {
-    margin-top: 0.6rem;
-    font-size: 0.88rem;
-    line-height: 1.65;
-    color: var(--ink);
-  }
-  .review-body p { margin: 0 0 0.75rem; }
-  .review-body p:last-child { margin-bottom: 0; }
+  .review-link:hover { text-decoration: underline; }
 
   .card-title { font-size: 0.95rem; line-height: 1.3; }
   .card.featured .card-title { font-size: 1.15rem; font-family: var(--font-serif); }

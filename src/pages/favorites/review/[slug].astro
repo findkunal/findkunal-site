@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { favorites } from '../../../data/favorites';
+
+const CLOUDINARY_CLOUD = 'dbi1tlqg3';
+
+function slugify(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function resolvePoster(poster: string): string {
+  if (/^https?:\/\//i.test(poster)) return poster;
+  const id = poster.replace(/^\/+/, '');
+  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload/f_auto,q_auto,w_400,h_600,c_fill,g_auto/${id}`;
+}
+
+export function getStaticPaths() {
+  const paths = [];
+  for (const section of favorites) {
+    for (const item of section.items) {
+      if (item.review) {
+        paths.push({
+          params: { slug: slugify(item.title) },
+          props: { item, sectionId: section.id, sectionHeading: section.heading },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { item, sectionId, sectionHeading } = Astro.props;
+const paragraphs = item.review!.split('\n\n');
+const posterSrc = item.poster ? resolvePoster(item.poster) : null;
+---
+<BaseLayout
+  title={`${item.title} — Kunal`}
+  description={paragraphs[0]?.slice(0, 155) + '…'}
+  ogImage={posterSrc ?? undefined}
+>
+  <a class="back" href={`/favorites#${sectionId}`}>← {sectionHeading}</a>
+
+  <article class="review">
+    <div class="header">
+      {posterSrc && (
+        <img class="poster" src={posterSrc} alt={`Poster of ${item.title}`} width="120" />
+      )}
+      <div class="meta">
+        <h1>{item.title}</h1>
+        <p class="sub muted">
+          {item.by && <span>{item.by}</span>}
+          {item.by && item.year && <span> · </span>}
+          {item.year && <span>{item.year}</span>}
+        </p>
+      </div>
+    </div>
+
+    <div class="body">
+      {paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+  }
+  .back:hover { color: var(--ink); }
+
+  .review { max-width: 38rem; }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .poster {
+    width: 80px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+  .meta { flex: 1; }
+  h1 {
+    margin: 0 0 0.35rem;
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+  .sub { font-size: 0.95rem; margin: 0; }
+
+  .body { font-family: var(--font-serif); font-size: 1.15rem; line-height: 1.7; }
+  .body p { margin: 0 0 1.2rem; }
+  .body p:last-child { margin-bottom: 0; }
+</style>
