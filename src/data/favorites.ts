@@ -240,10 +240,8 @@ export const favorites: FavoriteSection[] = [
         title: 'Berserk',
         by: 'Kentaro Miura',
         year: '1997–1998',
-        // TODO: TMDB ID needs verification — original 1997 anime is hard to
-        // surface in TMDB search. Update link, then run:
-        //   node scripts/verify-posters.mjs --force
-        link: 'https://www.themoviedb.org/tv/30991',
+        link: 'https://www.themoviedb.org/tv/35935',
+        poster: 'https://media.themoviedb.org/t/p/w500/xctRBSZzvoHDHz38ZZUGxRYetvG.jpg',
       },
       {
         title: 'Code Geass: Lelouch of the Rebellion',
