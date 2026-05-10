@@ -144,8 +144,8 @@ export const favorites: FavoriteSection[] = [
         title: 'Juror #2',
         by: 'Clint Eastwood',
         year: '2024',
-        link: 'https://www.themoviedb.org/movie/1052999',
-        poster: 'https://media.themoviedb.org/t/p/w500/i26w8yFGOpCoSloroeKQjpqlsG3.jpg',
+        link: 'https://www.themoviedb.org/movie/1106739',
+        poster: 'https://media.themoviedb.org/t/p/w500/ugQkpGajKFQ8eyOEhGheR0HfWQ.jpg',
         review: `This film lives in the grey area. At its center is a man haunted by the possibility that he may have done something terrible, and now finds himself on the jury deciding someone else's fate for the very act he fears he committed. That setup alone is enough to keep you riveted.\n\nWhat makes it linger is how honest it is about the struggle. He has everything to lose. A life he loves, a family he'd do anything for, and a guilt that won't let him rest. The tension between doing what's right and protecting yourself is so familiar it hurts. We've all stood at some version of that line. Most of us have just been lucky enough that the stakes were lower.\n\nThe pendulum of morality swings throughout. Just when you think you know where you stand, the film shifts your footing again. I also loved how it portrayed the other jurors, each one a small window into how people weigh evidence, conscience, and self-interest differently. It reminded me that justice is never as clean as we pretend.\n\nOne could only wish that no one has to face a moral dilemma like this. This one stayed with me for a while after the credits rolled. Absolutely worth your time.`,
       },
       {
@@ -159,15 +159,15 @@ export const favorites: FavoriteSection[] = [
         title: 'The Peanut Butter Falcon',
         by: 'Tyler Nilson, Michael Schwartz',
         year: '2019',
-        link: 'https://www.themoviedb.org/movie/527641',
-        poster: 'https://media.themoviedb.org/t/p/w500/kreTuJBkUjVWePRfhHZuYfhNE1T.jpg',
+        link: 'https://www.themoviedb.org/movie/463257',
+        poster: 'https://media.themoviedb.org/t/p/w500/qyQcRGvdW3VtxHR4fSDgPOePEip.jpg',
       },
       {
         title: 'The Straight Story',
         by: 'David Lynch',
         year: '1999',
-        link: 'https://www.themoviedb.org/movie/12549',
-        poster: 'https://media.themoviedb.org/t/p/w500/tkOidJCoRpqVTUlaQlAtG6Ejm9c.jpg',
+        link: 'https://www.themoviedb.org/movie/404',
+        poster: 'https://media.themoviedb.org/t/p/w500/tT9cMiVDdtlcdZxOoFy3VRmEoKk.jpg',
       },
     ],
   },
@@ -195,8 +195,8 @@ export const favorites: FavoriteSection[] = [
         title: 'The Pitt',
         by: 'R. Scott Gemmill',
         year: '2025–',
-        link: 'https://www.themoviedb.org/tv/241554',
-        poster: 'https://media.themoviedb.org/t/p/w500/mIKfKo2uDk3itzAPYIcSeYr4KtF.jpg',
+        link: 'https://www.themoviedb.org/tv/250307',
+        poster: 'https://media.themoviedb.org/t/p/w500/kvFSpESyBZMjaeOJDx7RS3P1jey.jpg',
       },
       {
         title: 'Seinfeld',
@@ -218,7 +218,8 @@ export const favorites: FavoriteSection[] = [
         by: 'Craig Silverstein',
         year: '2022–2023',
         featured: true,
-        link: 'https://www.themoviedb.org/tv/195339-pantheon',
+        link: 'https://www.themoviedb.org/tv/195339',
+        poster: 'https://media.themoviedb.org/t/p/w500/aZupC6eJhTe82e5I0JRaOBjFHOd.jpg',
         note: "This one sits very close to my heart. Pantheon takes the question I've been chewing on for years — what makes you, you? — and answers it with the seriousness it deserves. It treats consciousness, grief, family, and identity as engineering problems and as spiritual ones at the same time, without flinching from either. The final stretch is one of the most ambitious things I've seen on a screen: it scales from a single father-daughter conversation to the fate of the universe, and somehow earns every step. I don't know another show that takes ideas this big and stays this human.",
       },
       {
@@ -239,8 +240,10 @@ export const favorites: FavoriteSection[] = [
         title: 'Berserk',
         by: 'Kentaro Miura',
         year: '1997–1998',
+        // TODO: TMDB ID needs verification — original 1997 anime is hard to
+        // surface in TMDB search. Update link, then run:
+        //   node scripts/verify-posters.mjs --force
         link: 'https://www.themoviedb.org/tv/30991',
-        poster: 'https://media.themoviedb.org/t/p/w500/xDiXDfZwC6XYC6fxHI1jl3A3Ill.jpg',
       },
       {
         title: 'Code Geass: Lelouch of the Rebellion',
